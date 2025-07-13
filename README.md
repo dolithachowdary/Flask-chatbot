@@ -22,7 +22,7 @@ This is a simple chatbot project built using **Flask** as the backend (`bot.py`)
 
 ## 📁 Project Structure
 
-```
+
 
 .
 ├── bot.py              # Flask backend for chatbot
@@ -31,9 +31,10 @@ This is a simple chatbot project built using **Flask** as the backend (`bot.py`)
 ├── requirements.txt    # Python dependencies
 └── README.md           # Project info and usage guide
 
-````
+
 
 ---
+````
 
 ## 🧪 Installation and Setup
 
