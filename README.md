@@ -110,13 +110,6 @@ Just open `index.html` in any browser and start chatting!
 OPENROUTER_API_KEY=your_api_key_here
 ```
 
----
-
-## 📄 License
-
-This project is open-source and licensed under the MIT License.
-
----
 
 ## 🙋‍♀️ Author
 
