@@ -1,12 +1,11 @@
 # Flask-chatbot
-Sure! Here's a **single, clean `README.md` file** that you can **copy-paste directly into your GitHub repo**:
 
 ---
 
-```markdown
+
 # 💬 Flask Chatbot with OpenRouter (Mistral-7B)
 
-This is a simple chatbot project built using **Flask** as the backend (`bot.py`) and a basic **HTML frontend** (`index.html`). It uses **OpenRouter**'s AI models like `mistralai/mistral-7b-instruct` to generate intelligent responses.
+This is a simple chatbot project built using **Flask** as the backend (`bot.py`) and a basic **HTML frontend** (`index.html`). It uses **OpenRouter**'s AI models  to generate intelligent responses.
 
 ---
 
@@ -23,7 +22,7 @@ This is a simple chatbot project built using **Flask** as the backend (`bot.py`)
 ## 📁 Project Structure
 
 
-
+```
 .
 ├── bot.py              # Flask backend for chatbot
 ├── index.html          # Frontend interface
@@ -32,9 +31,9 @@ This is a simple chatbot project built using **Flask** as the backend (`bot.py`)
 └── README.md           # Project info and usage guide
 
 
-
+```
 ---
-````
+
 
 ## 🧪 Installation and Setup
 
@@ -121,7 +120,7 @@ This project is open-source and licensed under the MIT License.
 
 ## 🙋‍♀️ Author
 
-Made with ❤️ by [dolithachowdary](https://github.com/dolithachowdary)
+Made with ❤️ and HTML by [dolithachowdary](https://github.com/dolithachowdary)
 
 ---
 
