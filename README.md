@@ -3,7 +3,7 @@
 ---
 
 
-# 💬 Flask Chatbot with OpenRouter (Mistral-7B)
+# 💬 Flask Chatbot with OpenRouter 
 
 This is a simple chatbot project built using **Flask** as the backend (`bot.py`) and a basic **HTML frontend** (`index.html`). It uses **OpenRouter**'s AI models  to generate intelligent responses.
 
