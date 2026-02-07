@@ -1,23 +1,26 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-API_KEY = "sk-proj-..."  # Your full OpenRouter API key
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+API_KEY = os.getenv("GROQ_API_KEY")
+API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
-def ask_openrouter(question):
+def ask_groq(question):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
-        "HTTP-Referer": "http://localhost:3000",  # Change to your frontend URL
-        "X-Title": "MyApp",  # Can be anything, just for tracking
         "Content-Type": "application/json"
     }
 
     data = {
-        "model": "mistralai/mistral-7b-instruct",
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {"role": "user", "content": question}
         ]
@@ -28,7 +31,13 @@ def ask_openrouter(question):
         res.raise_for_status()
         return res.json()['choices'][0]['message']['content']
     except requests.exceptions.RequestException as e:
-        return f"Error: {res.status_code} - {res.text}"
+        status_code = res.status_code if 'res' in locals() else "N/A"
+        error_text = res.text if 'res' in locals() else str(e)
+        return f"Error: {status_code} - {error_text}"
+
+@app.route('/')
+def home():
+    return "Chatbot backend is running! Use index.html to chat."
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -37,7 +46,7 @@ def chat():
     if not user_message:
         return jsonify({"response": "Message cannot be empty"}), 400
 
-    reply = ask_openrouter(user_message)
+    reply = ask_groq(user_message)
     return jsonify({"response": reply})
 
 if __name__ == '__main__':
