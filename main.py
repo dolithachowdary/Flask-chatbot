@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import requests
 from dotenv import load_dotenv
@@ -37,7 +37,7 @@ def ask_groq(question):
 
 @app.route('/')
 def home():
-    return "Chatbot backend is running! Use index.html to chat."
+    return send_file('index.html')
 
 @app.route('/chat', methods=['POST'])
 def chat():
