@@ -11,6 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <!-- Font Awesome for clean icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Markdown & Syntax Highlighting -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
   <style>
     :root {
@@ -328,6 +332,73 @@
       line-height: 1.6;
       color: var(--main-text);
       position: relative;
+      word-wrap: break-word;
+    }
+
+    /* Markdown styling within bubbles */
+    .bubble h1,
+    .bubble h2,
+    .bubble h3 {
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    .bubble p {
+      margin-bottom: 8px;
+    }
+
+    .bubble ul,
+    .bubble ol {
+      margin-left: 20px;
+      margin-bottom: 8px;
+    }
+
+    .bubble code {
+      background: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9em;
+    }
+
+    .bubble pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 15px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+
+    .bubble pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    .bubble blockquote {
+      border-left: 4px solid var(--accent-color);
+      padding-left: 15px;
+      color: #64748b;
+      font-style: italic;
+      margin: 10px 0;
+    }
+
+    .bubble table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .bubble th,
+    .bubble td {
+      border: 1px solid #e2e8f0;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .bubble th {
+      background: #f8fafc;
     }
 
     .message-row.user .bubble {
@@ -439,6 +510,43 @@
       to {
         transform: translateY(0);
         opacity: 1;
+      }
+    }
+
+    /* Thinking Animation */
+    .thinking-dots {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      height: 20px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: dotPulse 1.4s infinite ease-in-out both;
+    }
+
+    .dot:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes dotPulse {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
       }
     }
 
@@ -622,6 +730,18 @@
     const toast = document.getElementById('toast');
 
     const API_URL = "/chat";
+    let isTyping = false;
+
+    // Configure marked options
+    marked.setOptions({
+      highlight: function (code, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          return hljs.highlight(code, { language: lang }).value;
+        }
+        return hljs.highlightAuto(code).value;
+      },
+      breaks: true
+    });
 
     // Customizable Avatars
     const botIcon = "https://cdn-icons-png.flaticon.com/512/4712/4712035.png";
@@ -671,7 +791,7 @@
 
     async function sendMessage() {
       const message = userInput.value.trim();
-      if (!message) return;
+      if (!message || isTyping) return;
 
       appendMessage(message, 'user');
       userInput.value = '';
@@ -689,7 +809,7 @@
         typingIndicator.remove();
 
         if (response.ok) {
-          appendMessage(data.response, 'bot');
+          typeMessage(data.response, 'bot');
         } else {
           appendMessage("Error: " + (data.error || "Failed to get response"), 'bot');
         }
@@ -704,9 +824,13 @@
       msgRow.className = `message-row ${sender}`;
 
       const avatarHtml = `<div class="avatar"><img src="${sender === 'user' ? userIcon : botIcon}" alt="${sender}"></div>`;
+
+      // Render text as Markdown if it's from bot
+      const processedText = sender === 'bot' ? marked.parse(text) : text;
+
       const bubbleHtml = `
                 <div class="bubble">
-                    ${text}
+                    ${processedText}
                     <div class="actions-overlay">
                         <i class="far fa-copy mini-btn" title="Copy"></i>
                         ${sender === 'bot' ? '<i class="far fa-thumbs-up mini-btn" title="Like"></i>' : ''}
@@ -718,6 +842,51 @@
 
       chatWindow.appendChild(msgRow);
       chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      // Apply syntax highlighting to any code blocks
+      msgRow.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    }
+
+    function typeMessage(text, sender) {
+      isTyping = true;
+      const msgRow = document.createElement('div');
+      msgRow.className = `message-row ${sender}`;
+
+      const avatarHtml = `<div class="avatar"><img src="${sender === 'user' ? userIcon : botIcon}" alt="${sender}"></div>`;
+      const bubbleHtml = `
+                <div class="bubble">
+                    <div class="typing-content"></div>
+                    <div class="actions-overlay">
+                        <i class="far fa-copy mini-btn" title="Copy"></i>
+                        ${sender === 'bot' ? '<i class="far fa-thumbs-up mini-btn" title="Like"></i>' : ''}
+                    </div>
+                </div>
+            `;
+
+      msgRow.innerHTML = avatarHtml + bubbleHtml;
+      chatWindow.appendChild(msgRow);
+
+      const contentDiv = msgRow.querySelector('.typing-content');
+      let i = 0;
+      const speed = 15; // Speed in ms
+
+      function type() {
+        if (i < text.length) {
+          contentDiv.innerHTML = marked.parse(text.substring(0, i + 1));
+          i++;
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+          setTimeout(type, speed);
+        } else {
+          isTyping = false;
+          contentDiv.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightElement(block);
+          });
+        }
+      }
+
+      type();
     }
 
     function showTypingIndicator() {
@@ -725,8 +894,12 @@
       indicator.className = 'message-row bot';
       indicator.innerHTML = `
                 <div class="avatar"><img src="${botIcon}" alt="Bot"></div>
-                <div class="bubble" style="padding: 12px 20px; font-style: italic; color: #64748b;">
-                    <i class="fas fa-circle-notch fa-spin fa-xs" style="margin-right: 8px;"></i> AI is processing...
+                <div class="bubble" style="padding: 12px 20px;">
+                    <div class="thinking-dots">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
                 </div>
             `;
       chatWindow.appendChild(indicator);
