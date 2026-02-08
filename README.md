@@ -1,39 +1,36 @@
-# Flask-chatbot
+# 💬 Modern Flask Chatbot (Groq AI)
+
+A premium, interactive chatbot application built with **Flask**, **Vanilla JS**, and **Groq AI**. Featuring a modern sidebar UI, real-time typing animations, and rich Markdown formatting.
 
 ---
 
+## 🚀 Key Features
 
-# 💬 Flask Chatbot with OpenRouter 
-
-This is a simple chatbot project built using **Flask** as the backend (`bot.py`) and a basic **HTML frontend** (`index.html`). It uses **OpenRouter**'s AI models  to generate intelligent responses.
-
----
-
-## 🚀 Features
-
-- ✅ Flask REST API to handle user messages
-- 🤖 AI replies powered by OpenRouter (Mistral-7B)
-- 🌐 Basic frontend using HTML + JavaScript
-- 🔐 API key management via `.env`
-- 🛡️ CORS enabled for frontend-backend communication
+- 🧠 **AI-Powered**: Intellectual responses powered by Groq's `llama-3.3-70b-versatile` model.
+- ✨ **Typing Animation**: ChatGPT-like character-by-character typing effect for a natural feel.
+- 💬 **Rich Markdown Support**: Full support for bold, italics, code blocks (with syntax highlighting), lists, and tables.
+- ⏳ **Thinking Indicator**: Sequential pulsing dots animation while waiting for AI processing.
+- � **Premium UI**: 
+    - Responsive Glassmorphic Sidebar.
+    - Personalised Avatars (via Dicebear).
+    - Dark-themed code blocks.
+    - Interactive Emoji Picker.
+    - Smooth slide-in message animations.
 
 ---
 
 ## 📁 Project Structure
 
-
 ```
 .
-├── bot.py              # Flask backend for chatbot
-├── index.html          # Frontend interface
-├── .env.example        # Example file to store API key (safe to share)
-├── requirements.txt    # Python dependencies
-└── README.md           # Project info and usage guide
-
-
+├── main.py             # Flask backend & API integration
+├── index.html          # Modern SPA frontend (HTML/CSS/JS)
+├── .env                # Private API configuration
+├── requirements.txt    # Backend dependencies
+└── README.md           # Project documentation
 ```
----
 
+---
 
 ## 🧪 Installation and Setup
 
@@ -42,7 +39,7 @@ This is a simple chatbot project built using **Flask** as the backend (`bot.py`)
 ```bash
 git clone https://github.com/dolithachowdary/Flask-chatbot.git
 cd Flask-chatbot
-````
+```
 
 ### 2. Install dependencies
 
@@ -50,15 +47,13 @@ cd Flask-chatbot
 pip install -r requirements.txt
 ```
 
-### 3. Add your OpenRouter API key
+### 3. Configure API Key
 
-Create a `.env` file in the root folder:
+Create a `.env` file in the root directory:
 
 ```env
-OPENROUTER_API_KEY=your_openrouter_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
 ```
-
-Do **not** upload this file to GitHub.
 
 ---
 
@@ -67,60 +62,47 @@ Do **not** upload this file to GitHub.
 ### 1. Start the Flask server
 
 ```bash
-python bot.py
+python main.py
 ```
 
-Server runs at: `http://localhost:5000`
+Server will start at: `http://localhost:5000`
 
-### 2. Open the Chatbot UI
+### 2. Open the Chatbot
 
-Just open `index.html` in any browser and start chatting!
+Simply navigate to `http://localhost:5000` in your web browser.
 
 ---
 
-## 📡 API Endpoint
+## 📡 API Reference
 
-**POST** `/chat`
-
-**Request body:**
-
-```json
-{
-  "message": "Hello!"
-}
-```
-
-**Response:**
-
-```json
-{
-  "response": "Hi there! How can I help you today?"
-}
-```
+### Send Message
+- **Endpoint**: `/chat`
+- **Method**: `POST`
+- **Payload**:
+  ```json
+  { "message": "Why is the sky blue?" }
+  ```
+- **Response**:
+  ```json
+  { "response": "The sky appears blue because of Rayleigh scattering..." }
+  ```
 
 ---
 
-## 🔒 Security Tips
+## 🔒 Security
 
-* Store your real API key only in a local `.env` file.
-* Never commit `.env` to GitHub.
-* Share `.env.example` instead, like this:
+- API keys are managed securely via environment variables.
+- `.env` is ignored by git to prevent accidental exposure.
+- CORS is configured for secure communication.
 
-```env
-OPENROUTER_API_KEY=your_api_key_here
-```
-
+---
 
 ## 🙋‍♀️ Author
 
-Made with ❤️ and HTML by [dolithachowdary](https://github.com/dolithachowdary)
+Made with ❤️ by [dolithachowdary](https://github.com/dolithachowdary)
 
 ---
 
 ## ⭐️ Support
 
 If you found this useful, please give the repo a ⭐ on GitHub!
-
-
-
-
